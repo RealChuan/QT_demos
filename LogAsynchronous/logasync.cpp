@@ -3,7 +3,6 @@
 
 #include <QDateTime>
 #include <QWaitCondition>
-#include <QMutex>
 
 // 消息处理函数
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -54,14 +53,15 @@ struct LogAsyncPrivate{
     QMutex mutex;
 };
 
-static QMutex g_mutex;
+QMutex LogAsync::m_mutex;
 
 LogAsync *LogAsync::instance()
 {
-    QMutexLocker locker(&g_mutex);
+    QMutexLocker locker(&m_mutex);
     static LogAsync log;
     return &log;
 }
+
 
 void LogAsync::setOrientation(LogAsync::Orientation orientation)
 {

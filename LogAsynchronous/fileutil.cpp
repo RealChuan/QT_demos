@@ -48,12 +48,10 @@ void FileUtil::onWrite(const QString &msg)
         if(thisPeriod != d->startTime){
             d->count = 0;
             rollFile(0);
-            autoDelFile();
         }
     }
 
     d->stream << msg;
-    //d->file.write(msg.toLocal8Bit().constData());
 }
 
 void FileUtil::onFlush()
@@ -84,6 +82,8 @@ bool FileUtil::rollFile(int count)
     QString filename = getFileName(&now);
     if(count){
         filename += QString(".%1").arg(count);
+    }else{
+        autoDelFile();
     }
     qint64 start = now / kRollPerSeconds_ * kRollPerSeconds_;
     if (now > d->lastRoll){
